@@ -24,8 +24,8 @@ export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
   @Post()
-  async create(@Body() createEmployeeDto: Employee) {
-    return await this.employeesService.create(createEmployeeDto);
+  async create(@Body() createEmployee: Employee) {
+    return await this.employeesService.create(createEmployee);
   }
 
   @Get('/all')
@@ -41,9 +41,9 @@ export class EmployeesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateEmployeeDto: UpdateEmployee,
+    @Body() updateEmployee: UpdateEmployee,
   ) {
-    return await this.employeesService.update(id, updateEmployeeDto);
+    return await this.employeesService.update(id, updateEmployee);
   }
 
   @HttpCode(204)

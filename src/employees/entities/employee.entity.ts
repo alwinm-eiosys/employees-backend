@@ -33,7 +33,7 @@ export class Employee {
   id: number;
 
   @Column({ type: 'varchar', length: 30 })
-  @MaxLength(30, { message: 'Name cannot exceed 100 characters' })
+  @MaxLength(30, { message: 'Name cannot exceed 30 characters' })
   @MinLength(3, { message: 'Name must be at least 3 characters long' })
   @Matches(/^[a-z]+(?:[ '-][a-z]+)*$/, {
     message:
@@ -67,6 +67,7 @@ export class Employee {
   @IsEnum(Department, {
     message: `Department must be one of: ${Object.values(Department).join(', ')}`,
   })
+  @IsString()
   @IsNotEmpty({ message: 'Department cannot be empty' })
   @Transform(({ value }) =>
     typeof value === 'string' ? value.trim().toLowerCase() : value,

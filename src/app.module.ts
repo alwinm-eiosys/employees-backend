@@ -5,19 +5,26 @@ import { EmployeesModule } from './employees/employees.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-
+import { ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [EmployeesModule,AuthModule,  ConfigModule.forRoot({ isGlobal: true }),
-     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'Clash4fun123!',
-      database: 'employees_db',
-      autoLoadEntities: true, // Automatically links your @Entity() classes
-      synchronize: true,      // Automatically updates SQL tables based on entities (dev only)
+  imports: [
+    EmployeesModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: Number(configService.get('DB_PORT')),
+        username: configService.get<string>('DB_USER'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        autoLoadEntities: true,
+        synchronize: configService.get<string>('NODE_ENV') !== 'production', // true for dev, false for prod!
+      }),
     }),
   ],
   controllers: [AppController],
