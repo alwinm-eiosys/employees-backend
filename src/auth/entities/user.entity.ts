@@ -4,7 +4,7 @@ import { IsEmail, IsString, MinLength, MaxLength } from 'class-validator';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({type:'int'})
   id: number;
 
   @Column({ type: 'varchar', length: 255, unique: true })

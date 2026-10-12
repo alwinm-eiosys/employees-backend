@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -12,13 +8,14 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(User)
+    private readonly users: Repository<User>,
     private readonly jwt: JwtService,
   ) {}
 
   async register({ email, password }: User) {
     if (await this.users.findOneBy({ email })) {
-      throw new ConflictException('Email already registered');
+      throw new ConflictException('Email already registered');  //conflict with bussiness logic
     }
     const hash = await bcrypt.hash(password, 10);
     await this.users.save(this.users.create({ email, password: hash }));

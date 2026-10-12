@@ -8,17 +8,17 @@ import {
   Delete,
   Query,
   HttpCode,
+  HttpStatus,
   ParseIntPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 
 import { EmployeesService } from './employees.service';
-import {
-  Employee,
-  UpdateEmployee,
-  FilterEmployee,
-} from './entities/employee.entity';
+import { Employee, UpdateEmployee, FilterEmployee } from './entities/employee.entity';
 
-
+// ClassSerializerInterceptor applies @Exclude (hides bank details in responses)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('employees')
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
@@ -28,7 +28,7 @@ export class EmployeesController {
     return await this.employeesService.create(createEmployee);
   }
 
-  @Get('/all')
+  @Get()
   async findAll(@Query() filter: FilterEmployee) {
     return await this.employeesService.findAll(filter);
   }
@@ -39,16 +39,18 @@ export class EmployeesController {
   }
 
   @Patch(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateEmployee: UpdateEmployee,
-  ) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateEmployee: UpdateEmployee) {
     return await this.employeesService.update(id, updateEmployee);
   }
 
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return await this.employeesService.delete(id);
+    await this.employeesService.delete(id);
+  }
+
+  @Patch(':id/restore')
+  async restore(@Param('id', ParseIntPipe) id: number) {
+    return await this.employeesService.restore(id);
   }
 }
