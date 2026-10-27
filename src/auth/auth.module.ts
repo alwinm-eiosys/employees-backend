@@ -5,13 +5,13 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategies';
-import { User } from './entities/user.entity';
+import { Admin } from './entities/admin.entity';
 
 import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Admin]),
     PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],

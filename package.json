@@ -21,6 +21,8 @@
     "test:e2e": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@keyv/redis": "^6.1.0",
+    "@nestjs/cache-manager": "^12.0.1",
     "@nestjs/common": "^12.0.1",
     "@nestjs/config": "^12.0.1",
     "@nestjs/core": "^12.0.1",
@@ -28,8 +30,10 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^12.0.0",
     "@nestjs/platform-express": "^12.0.1",
+    "@nestjs/schedule": "^12.0.2",
     "@nestjs/typeorm": "^12.0.2",
     "bcrypt": "^6.0.0",
+    "cache-manager": "^7.2.9",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "passport": "^0.7.0",

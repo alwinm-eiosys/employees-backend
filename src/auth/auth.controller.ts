@@ -1,27 +1,41 @@
-import { Body, Controller, Get, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from './entities/user.entity';
+import { CreateAdmin, LoginAdmin } from './entities/admin.entity';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
-  async register(@Body() body: User) {
-    return await this.authService.register(body);
+  // One-time setup endpoint. It works only while ADMIN_BOOTSTRAP_SECRET is set
+  // and no admin record has ever been created.
+  @Post('bootstrap-admin')
+  bootstrapAdmin(
+    @Body() body: CreateAdmin,
+    @Headers('x-admin-bootstrap-secret') bootstrapSecret?: string,
+  ) {
+    return this.authService.bootstrapFirstAdmin(body, bootstrapSecret);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body() body: User) {
-    return await this.authService.login(body);
+  login(@Body() body: LoginAdmin) {
+    return this.authService.login(body);
   }
 
-  // handy for testing: returns whatever validate() produced
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  async me(@Req() req: { user: unknown }) {
-    return await req.user;
+  me(@Req() req: { user: { userId: number; email: string } }) {
+    return req.user;
   }
 }

@@ -438,7 +438,7 @@ export class FilterEmployee {
   @Min(1, { message: 'Limit must be 1 or more' })
   @IsInt({ message: 'Limit must be a valid integer' })
   @Type(() => Number)
-  limit: number = 10;
+  limit: number = 5;
 
   // search (name, email, employee code)
   @IsOptional()
